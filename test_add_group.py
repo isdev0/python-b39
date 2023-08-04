@@ -7,8 +7,8 @@ import unittest
 
 class TestAddGroup(unittest.TestCase):
     def setUp(self):
-        #self.wd = webdriver.Firefox()
-        self.wd = webdriver.Chrome()
+        self.wd = webdriver.Firefox()
+        #self.wd = webdriver.Chrome()
         self.wd.maximize_window()
         self.wd.implicitly_wait(30)
 
