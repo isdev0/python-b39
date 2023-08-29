@@ -7,7 +7,7 @@ from selenium.common.exceptions import NoAlertPresentException
 import unittest
 
 
-class TestAddElement(unittest.TestCase):
+class TestAddContact(unittest.TestCase):
     def setUp(self):
         self.wd = webdriver.Firefox()
         #self.wd = webdriver.Chrome()
@@ -23,10 +23,7 @@ class TestAddElement(unittest.TestCase):
         wd.find_element(By.NAME, "pass").send_keys(password)
         wd.find_element(By.XPATH, "//input[@value='Login']").click()
 
-    def test_add_element(self):
-        wd = self.wd
-        wd.get("http://localhost/addressbook/")
-        self.login(wd, username="admin", password="secret")
+    def create_new_contact(self, wd):
         wd.find_element(By.LINK_TEXT, "add new").click()
         wd.find_element(By.NAME, "firstname").click()
         wd.find_element(By.NAME, "firstname").clear()
@@ -92,7 +89,9 @@ class TestAddElement(unittest.TestCase):
         wd.find_element(By.NAME, "notes").clear()
         wd.find_element(By.NAME, "notes").send_keys("notes")
         wd.find_element(By.XPATH, "//div[@id='content']/form/input[21]").click()
-        wd.find_element(By.LINK_TEXT, "home").click()
+
+    def open_internal_page(self, wd, tab):
+        wd.find_element(By.LINK_TEXT, tab).click()
 
     def is_element_present(self, how, what):
         try: self.wd.find_element(by=how, value=what)
@@ -103,6 +102,16 @@ class TestAddElement(unittest.TestCase):
         try: self.wd.switch_to_alert()
         except NoAlertPresentException as e: return False
         return True
+
+
+
+    def test_add_contact(self):
+        wd = self.wd
+        wd.get("http://localhost/addressbook/")
+        self.login(wd, username="admin", password="secret")
+        self.create_new_contact(wd)
+        self.open_internal_page(wd, "home")
+        self.open_internal_page(wd, "Logout")
 
     def tearDown(self):
         self.wd.quit()
