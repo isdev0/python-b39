@@ -1,28 +1,20 @@
 # -*- coding: utf-8 -*-
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.common.exceptions import NoSuchElementException
-from selenium.common.exceptions import NoAlertPresentException
-from group import Group
+import pytest
 from application import Application
-import unittest
+from group import Group
 
-class TestAddGroup(unittest.TestCase):
-    def setUp(self):
-        self.app = Application()
+@pytest.fixture
+def app(request):
+    fixture = Application()
+    request.addfinalizer(fixture.destroy)
+    return fixture
 
-    def test_add_group(self):
-        self.app.login(username="admin", password="secret")
-        self.app.create_group(Group(name="123123", header="123", footer="234"))
-        self.app.logout()
+def test_add_group(app):
+    app.login(username="admin", password="secret")
+    app.create_group(Group(name="123123", header="123", footer="234"))
+    app.logout()
 
-    def test_add_empty_group(self):
-        self.app.login(username="admin", password="secret")
-        self.app.create_group(Group(name="", header="", footer=""))
-        self.app.logout()
-
-    def tearDown(self):
-        self.app.destroy()
-
-if __name__ == "__main__":
-    unittest.main()
+def test_add_empty_group(app):
+    app.login(username="admin", password="secret")
+    app.create_group(Group(name="", header="", footer=""))
+    app.logout()
