@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from selenium.webdriver.common.by import By
 
 class SessionHelper:
@@ -19,4 +20,5 @@ class SessionHelper:
     def logout(self):
         wd = self.app.wd
         self.app.open_internal_page("Logout")
+        wd
 
