@@ -1,8 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.select import Select
-#from selenium.webdriver.support.ui import Select
-
+from fixture.session import SessionHelper
 
 class Application:
 
@@ -11,6 +10,7 @@ class Application:
         #self.wd = webdriver.Chrome()
         self.wd.maximize_window()
         self.wd.implicitly_wait(30)
+        self.session = SessionHelper(self)
 
     def create_group(self, group):
         wd = self.wd
@@ -126,21 +126,6 @@ class Application:
 
         wd.find_element(By.XPATH, "//div[@id='content']/form/input[21]").click()
         self.open_internal_page("home")
-
-    def login(self, username, password):
-        wd = self.wd
-        self.open_external_page("http://localhost/addressbook/")
-        wd.find_element(By.NAME, "user").click()
-        wd.find_element(By.NAME, "user").clear()
-        wd.find_element(By.NAME, "user").send_keys(username)
-        wd.find_element(By.NAME, "pass").click()
-        wd.find_element(By.NAME, "pass").clear()
-        wd.find_element(By.NAME, "pass").send_keys(password)
-        wd.find_element(By.XPATH, "//input[@value='Login']").click()
-
-    def logout(self):
-        wd = self.wd
-        self.open_internal_page("Logout")
 
     def open_internal_page(self, tab):
         wd = self.wd
