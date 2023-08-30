@@ -16,6 +16,8 @@ class TestAddContact(unittest.TestCase):
         self.wd.implicitly_wait(30)
 
     def login(self, wd, username, password):
+        wd.get("http://localhost/addressbook/")
+
         wd.find_element(By.NAME, "user").click()
         wd.find_element(By.NAME, "user").clear()
         wd.find_element(By.NAME, "user").send_keys(username)
@@ -23,6 +25,9 @@ class TestAddContact(unittest.TestCase):
         wd.find_element(By.NAME, "pass").clear()
         wd.find_element(By.NAME, "pass").send_keys(password)
         wd.find_element(By.XPATH, "//input[@value='Login']").click()
+
+    def logout(self, wd):
+        self.open_internal_page(wd, "Logout")
 
     def create_contact(self, wd, contact):
 
@@ -117,6 +122,7 @@ class TestAddContact(unittest.TestCase):
         wd.find_element(By.NAME, "notes").send_keys(contact.notes)
 
         wd.find_element(By.XPATH, "//div[@id='content']/form/input[21]").click()
+        self.open_internal_page(wd, "home")
 
     def open_internal_page(self, wd, tab):
         wd.find_element(By.LINK_TEXT, tab).click()
@@ -135,7 +141,6 @@ class TestAddContact(unittest.TestCase):
 
     def test_add_contact(self):
         wd = self.wd
-        wd.get("http://localhost/addressbook/")
         self.login(wd, username="admin", password="secret")
         self.create_contact(wd, Contact(
             firstname   = "Fname",
@@ -162,8 +167,7 @@ class TestAddContact(unittest.TestCase):
             address2    = "Address2",
             phone2      = "home",
             notes       = "notes"))
-        self.open_internal_page(wd, "home")
-        self.open_internal_page(wd, "Logout")
+        self.logout(wd)
 
     def tearDown(self):
         self.wd.quit()

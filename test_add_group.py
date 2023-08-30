@@ -14,10 +14,10 @@ class TestAddGroup(unittest.TestCase):
         self.wd.implicitly_wait(30)
 
     def create_group(self, wd, group):
-        # create new group
+
+        self.open_internal_page(wd, "groups")
         wd.find_element(By.NAME, "new").click()
 
-        # fill out group values
         wd.find_element(By.NAME, "group_name").click()
         wd.find_element(By.NAME, "group_name").clear()
         wd.find_element(By.NAME, "group_name").send_keys(group.name)
@@ -28,10 +28,12 @@ class TestAddGroup(unittest.TestCase):
         wd.find_element(By.NAME, "group_footer").clear()
         wd.find_element(By.NAME, "group_footer").send_keys(group.footer)
 
-        # save new group
+        # save new group, return to the groups list
         wd.find_element(By.NAME, "submit").click()
+        self.open_internal_page(wd, "groups")
 
     def login(self, wd, username, password):
+        self.open_external_page(wd, "http://localhost/addressbook/")
         wd.find_element(By.NAME, "user").click()
         wd.find_element(By.NAME, "user").clear()
         wd.find_element(By.NAME, "user").send_keys(username)
@@ -39,6 +41,9 @@ class TestAddGroup(unittest.TestCase):
         wd.find_element(By.NAME, "pass").clear()
         wd.find_element(By.NAME, "pass").send_keys(password)
         wd.find_element(By.XPATH, "//input[@value='Login']").click()
+
+    def logout(self, wd):
+        self.open_internal_page(wd, "Logout")
 
     def open_internal_page(self, wd, tab):
         wd.find_element(By.LINK_TEXT, tab).click()
@@ -60,21 +65,15 @@ class TestAddGroup(unittest.TestCase):
 
     def test_add_group(self):
         wd = self.wd
-        self.open_external_page(wd, "http://localhost/addressbook/")
         self.login(wd, username="admin", password="secret")
-        self.open_internal_page(wd, "groups")
         self.create_group(wd, Group(name="123123", header="123", footer="234"))
-        self.open_internal_page(wd, "groups")
-        self.open_internal_page(wd, "Logout")
+        self.logout(wd)
 
     def test_add_empty_group(self):
         wd = self.wd
-        self.open_external_page(wd, "http://localhost/addressbook/")
         self.login(wd, username="admin", password="secret")
-        self.open_internal_page(wd, "groups")
         self.create_group(wd, Group(name="", header="", footer=""))
-        self.open_internal_page(wd, "groups")
-        self.open_internal_page(wd, "Logout")
+        self.logout(wd)
 
     def tearDown(self):
         self.wd.quit()
