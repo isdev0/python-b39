@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import time
+
 from selenium.webdriver.common.by import By
 
 class SessionHelper:
@@ -20,5 +22,5 @@ class SessionHelper:
     def logout(self):
         wd = self.app.wd
         self.app.open_internal_page("Logout")
-        wd
+        time.sleep(0.25)
 
