@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.select import Select
 from fixture.session import SessionHelper
+from fixture.group import GroupHelper
 
 class Application:
 
@@ -11,26 +12,7 @@ class Application:
         self.wd.maximize_window()
         self.wd.implicitly_wait(30)
         self.session = SessionHelper(self)
-
-    def create_group(self, group):
-        wd = self.wd
-
-        self.open_internal_page("groups")
-        wd.find_element(By.NAME, "new").click()
-
-        wd.find_element(By.NAME, "group_name").click()
-        wd.find_element(By.NAME, "group_name").clear()
-        wd.find_element(By.NAME, "group_name").send_keys(group.name)
-        wd.find_element(By.NAME, "group_header").click()
-        wd.find_element(By.NAME, "group_header").clear()
-        wd.find_element(By.NAME, "group_header").send_keys(group.header)
-        wd.find_element(By.NAME, "group_footer").click()
-        wd.find_element(By.NAME, "group_footer").clear()
-        wd.find_element(By.NAME, "group_footer").send_keys(group.footer)
-
-        # save new group, return to the groups list
-        wd.find_element(By.NAME, "submit").click()
-        self.open_internal_page("groups")
+        self.group = GroupHelper(self)
 
     def create_contact(self, contact):
         wd = self.wd
