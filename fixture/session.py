@@ -22,5 +22,6 @@ class SessionHelper:
     def logout(self):
         wd = self.app.wd
         self.app.open_internal_page("Logout")
-        time.sleep(0.25)
+        wd.find_element(By.NAME, "user")
+        #time.sleep(0.25)
 
