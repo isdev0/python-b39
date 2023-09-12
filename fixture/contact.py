@@ -103,7 +103,7 @@ class ContactHelper:
         wd.find_element(By.XPATH, "//div[@id='content']/form/input[21]").click()
         self.app.open_internal_page("home")
 
-    def edit_first(self, contact):
+    def update_first(self, contact):
         wd = self.app.wd
 
         self.app.open_internal_page("home")
@@ -196,7 +196,7 @@ class ContactHelper:
         wd.find_element(By.NAME, "update").click()
         self.app.open_internal_page("home")
 
-    def delete_first_contact(self):
+    def delete_first(self):
         wd = self.app.wd
         self.app.open_internal_page("home")
         wd.find_element(By.NAME, "selected[]").click()

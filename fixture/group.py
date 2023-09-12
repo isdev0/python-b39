@@ -27,7 +27,7 @@ class GroupHelper:
         wd.find_element(By.NAME, "submit").click()
         self.app.open_internal_page("groups")
 
-    def edit_first_group(self, group):
+    def update_first(self, group):
         wd = self.app.wd
 
         self.app.open_internal_page("groups")
@@ -49,7 +49,7 @@ class GroupHelper:
         wd.find_element(By.NAME, "update").click()
         self.app.open_internal_page("groups")
 
-    def delete_first_group(self):
+    def delete_first(self):
         wd = self.app.wd
         self.app.open_internal_page("groups")
         wd.find_element(By.NAME, "selected[]").click()

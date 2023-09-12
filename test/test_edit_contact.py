@@ -3,7 +3,7 @@ from model.contact import Contact
 
 def test_edit_first_contact(app):
     app.session.login(username="admin", password="secret")
-    app.contact.edit_first(Contact(
+    app.contact.update_first(Contact(
         firstname   = "Fname9999",
         middlename  = "Mname9999",
         lastname    = "Lname9999",
