@@ -12,17 +12,7 @@ class GroupHelper:
         self.app.open_internal_page("groups")
         wd.find_element(By.NAME, "new").click()
 
-        wd.find_element(By.NAME, "group_name").click()
-        wd.find_element(By.NAME, "group_name").clear()
-        wd.find_element(By.NAME, "group_name").send_keys(group.name)
-
-        wd.find_element(By.NAME, "group_header").click()
-        wd.find_element(By.NAME, "group_header").clear()
-        wd.find_element(By.NAME, "group_header").send_keys(group.header)
-
-        wd.find_element(By.NAME, "group_footer").click()
-        wd.find_element(By.NAME, "group_footer").clear()
-        wd.find_element(By.NAME, "group_footer").send_keys(group.footer)
+        self.fill_group_form(group)
 
         wd.find_element(By.NAME, "submit").click()
         self.app.open_internal_page("groups")
@@ -34,17 +24,7 @@ class GroupHelper:
         wd.find_element(By.NAME, "selected[]").click()
         wd.find_element(By.NAME, "edit").click()
 
-        wd.find_element(By.NAME, "group_name").click()
-        wd.find_element(By.NAME, "group_name").clear()
-        wd.find_element(By.NAME, "group_name").send_keys(group.name)
-
-        wd.find_element(By.NAME, "group_header").click()
-        wd.find_element(By.NAME, "group_header").clear()
-        wd.find_element(By.NAME, "group_header").send_keys(group.header)
-
-        wd.find_element(By.NAME, "group_footer").click()
-        wd.find_element(By.NAME, "group_footer").clear()
-        wd.find_element(By.NAME, "group_footer").send_keys(group.footer)
+        self.fill_group_form(group)
 
         wd.find_element(By.NAME, "update").click()
         self.app.open_internal_page("groups")
@@ -56,4 +36,15 @@ class GroupHelper:
         wd.find_element(By.NAME, "delete").click()
         self.app.open_internal_page("groups")
 
+    def fill_group_form(self, group):
+        self.fill_field("group_name", group.name)
+        self.fill_field("group_header", group.header)
+        self.fill_field("group_footer", group.footer)
+
+    def fill_field(self, field_name, value):
+        wd = self.app.wd
+        if value is not None:
+            wd.find_element(By.NAME, field_name).click()
+            wd.find_element(By.NAME, field_name).clear()
+            wd.find_element(By.NAME, field_name).send_keys(value)
 
