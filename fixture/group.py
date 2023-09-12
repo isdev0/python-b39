@@ -6,35 +6,40 @@ class GroupHelper:
     def __init__(self, app):
         self.app = app
 
+    def open_groups_page(self):
+        wd = self.app.wd
+        if not(wd.current_url.endswith("/group.php") and len(wd.find_elements(By.NAME, "new")) > 0):
+            self.app.open_internal_page("groups")
+
     def create(self, group):
         wd = self.app.wd
 
-        self.app.open_internal_page("groups")
+        self.open_groups_page()
         wd.find_element(By.NAME, "new").click()
 
         self.fill_group_form(group)
 
         wd.find_element(By.NAME, "submit").click()
-        self.app.open_internal_page("groups")
+        self.open_groups_page()
 
     def update_first(self, group):
         wd = self.app.wd
 
-        self.app.open_internal_page("groups")
+        self.open_groups_page()
         wd.find_element(By.NAME, "selected[]").click()
         wd.find_element(By.NAME, "edit").click()
 
         self.fill_group_form(group)
 
         wd.find_element(By.NAME, "update").click()
-        self.app.open_internal_page("groups")
+        self.open_groups_page()
 
     def delete_first(self):
         wd = self.app.wd
-        self.app.open_internal_page("groups")
+        self.open_groups_page()
         wd.find_element(By.NAME, "selected[]").click()
         wd.find_element(By.NAME, "delete").click()
-        self.app.open_internal_page("groups")
+        self.open_groups_page()
 
     def fill_group_form(self, group):
         self.fill_field("group_name", group.name)
@@ -50,5 +55,5 @@ class GroupHelper:
 
     def count(self):
         wd = self.app.wd
-        self.app.open_internal_page("groups")
+        self.open_groups_page()
         return len(wd.find_elements(By.NAME, "selected[]"))

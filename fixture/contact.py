@@ -8,10 +8,15 @@ class ContactHelper:
     def __init__(self, app):
         self.app = app
 
+    def open_home_page(self):
+        wd = self.app.wd
+        if not(len(wd.find_elements(By.NAME, "searchstring")) > 0):
+            self.app.open_internal_page("home")
+
     def create(self, contact):
         wd = self.app.wd
 
-        # creating mode
+        # creating mode, default
         mode = 0
 
         wd.find_element(By.LINK_TEXT, "add new").click()
@@ -19,7 +24,7 @@ class ContactHelper:
         self.fill_client_form(contact, mode)
 
         wd.find_element(By.XPATH, "//div[@id='content']/form/input[21]").click()
-        self.app.open_internal_page("home")
+        self.open_home_page()
 
     def update_first(self, contact):
         wd = self.app.wd
@@ -27,21 +32,21 @@ class ContactHelper:
         # updating mode
         mode = 1
 
-        self.app.open_internal_page("home")
+        self.open_home_page()
         wd.find_element(By.XPATH, "//img[@alt='Edit']").click()
 
         self.fill_client_form(contact, mode)
 
         wd.find_element(By.NAME, "update").click()
-        self.app.open_internal_page("home")
+        self.open_home_page()
 
     def delete_first(self):
         wd = self.app.wd
-        self.app.open_internal_page("home")
+        self.open_home_page()
         wd.find_element(By.NAME, "selected[]").click()
         wd.find_element(By.XPATH, "//input[@value='Delete']").click()
         wd.switch_to.alert.accept()
-        self.app.open_internal_page("home")
+        self.open_home_page()
 
     def fill_client_form(self, contact, mode=0):
         # mode = 0:creating
@@ -87,11 +92,10 @@ class ContactHelper:
             wd.find_element(By.NAME, field_name).click()
             Select(wd.find_element(By.NAME, field_name)).select_by_visible_text(value)
             if mode == 1 and field_name == "amonth":
-                wd.find_element(By.CSS_SELECTOR, "select[name=\"" + field_name + "\"] > option[value=\"" + value.lower() + "\"]").click()
-            else:
-                wd.find_element(By.CSS_SELECTOR, "select[name=\"" + field_name + "\"] > option[value=\"" + value + "\"]").click()
+                value = value.lower()
+            wd.find_element(By.CSS_SELECTOR, "select[name=\"" + field_name + "\"] > option[value=\"" + value + "\"]").click()
 
     def count(self):
         wd = self.app.wd
-        self.app.open_internal_page("home")
+        self.open_home_page()
         return len(wd.find_elements(By.NAME, "selected[]"))
