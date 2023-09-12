@@ -2,7 +2,6 @@
 from model.contact import Contact
 
 def test_edit_first_contact(app):
-    app.session.login(username="admin", password="secret")
     app.contact.update_first(Contact(
         firstname   = "Fname9999",
         middlename  = "Mname9999",
@@ -28,4 +27,3 @@ def test_edit_first_contact(app):
         address2    = "Address29999",
         phone2      = "home9999",
         notes       = "notes9999"))
-    app.session.logout()
