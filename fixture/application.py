@@ -16,6 +16,13 @@ class Application:
         self.group      = GroupHelper(self)
         self.contact    = ContactHelper(self)
 
+    def is_valid(self):
+        try:
+            self.wd.current_url
+            return True
+        except:
+            return False
+
     def open_internal_page(self, tab):
         wd = self.wd
         wd.find_element(By.LINK_TEXT, tab).click()
