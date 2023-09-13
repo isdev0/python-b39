@@ -73,7 +73,8 @@ class ContactHelper:
         self.fill_selector("bmonth", contact.bmonth)
         self.fill_field("byear", contact.byear)
         self.fill_selector("aday", contact.aday)
-        self.fill_selector("amonth", contact.amonth, mode)
+        if   mode == 0: self.fill_selector("amonth", contact.amonth)
+        elif mode == 1: self.fill_selector("amonth", contact.amonth.lower())
         self.fill_field("ayear", contact.ayear)
         self.fill_field("address2", contact.address2)
         self.fill_field("phone2", contact.phone2)
@@ -86,13 +87,11 @@ class ContactHelper:
             wd.find_element(By.NAME, field_name).clear()
             wd.find_element(By.NAME, field_name).send_keys(value)
 
-    def fill_selector(self, field_name, value, mode=0):
+    def fill_selector(self, field_name, value):
         wd = self.app.wd
         if value is not None:
             wd.find_element(By.NAME, field_name).click()
-            Select(wd.find_element(By.NAME, field_name)).select_by_visible_text(value)
-            if mode == 1 and field_name == "amonth":
-                value = value.lower()
+            Select(wd.find_element(By.NAME, field_name)).select_by_value(value)
             wd.find_element(By.CSS_SELECTOR, "select[name=\"" + field_name + "\"] > option[value=\"" + value + "\"]").click()
 
     def count(self):
