@@ -31,13 +31,16 @@ class ContactHelper:
         self.contact_cache = None
 
     def update_first(self, contact):
+        self.update_by_index(0)
+
+    def update_by_index(self, index, contact):
         wd = self.app.wd
 
         # updating mode
         mode = 1
 
         self.open_home_page()
-        wd.find_element(By.XPATH, "//img[@alt='Edit']").click()
+        wd.find_elements(By.XPATH, "//img[@alt='Edit']")[index].click()
 
         self.fill_client_form(contact, mode)
 
@@ -46,9 +49,12 @@ class ContactHelper:
         self.contact_cache = None
 
     def delete_first(self):
+        self.delete_by_index(0)
+
+    def delete_by_index(self, index):
         wd = self.app.wd
         self.open_home_page()
-        wd.find_element(By.NAME, "selected[]").click()
+        wd.find_elements(By.NAME, "selected[]")[index].click()
         wd.find_element(By.XPATH, "//input[@value='Delete']").click()
         wd.switch_to.alert.accept()
         time.sleep(0.25) #FIXME needs to find the way to avoid delaying
