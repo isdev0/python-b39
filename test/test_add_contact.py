@@ -11,10 +11,10 @@ def test_add_contact(app):
         title       = "Title",
         company     = "Company",
         address     = "Address1",
-        home        = "111",
-        mobile      = "222",
-        work        = "333",
-        fax         = "444",
+        home        = "111-111",
+        mobile      = "(222)222",
+        work        = "333 333",
+        fax         = "44-44-44",
         email       = "email1",
         email2      = "email2",
         email3      = "email3",
@@ -26,7 +26,7 @@ def test_add_contact(app):
         amonth      = "February",
         ayear       = "2002",
         address2    = "Address2",
-        phone2      = "home",
+        phone2      = "555555",
         notes       = "notes"
     )
 

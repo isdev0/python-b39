@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import time
+import time, re
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.select import Select
 from model.contact import Contact
@@ -15,6 +15,11 @@ class ContactHelper:
         wd = self.app.wd
         if not(len(wd.find_elements(By.NAME, "searchstring")) > 0):
             self.app.open_internal_page("home")
+
+    def open_contact_by_index(self, index, alt="Edit"):
+        wd = self.app.wd
+        self.open_home_page()
+        wd.find_elements(By.XPATH, "//img[@alt='" + alt + "']")[index].click()
 
     def create(self, contact):
         wd = self.app.wd
@@ -39,9 +44,7 @@ class ContactHelper:
         # updating mode
         mode = 1
 
-        self.open_home_page()
-        wd.find_elements(By.XPATH, "//img[@alt='Edit']")[index].click()
-
+        self.open_contact_by_index(index, "Edit")
         self.fill_client_form(contact, mode)
 
         wd.find_element(By.NAME, "update").click()
@@ -105,7 +108,7 @@ class ContactHelper:
         if value is not None:
             wd.find_element(By.NAME, field_name).click()
             Select(wd.find_element(By.NAME, field_name)).select_by_value(value)
-            wd.find_element(By.CSS_SELECTOR, "select[name=\"" + field_name + "\"] > option[value=\"" + value + "\"]").click()
+            wd.find_element(By.CSS_SELECTOR, "select[name='" + field_name + "'] > option[value='" + value + "']").click()
 
     def count(self):
         wd = self.app.wd
@@ -124,6 +127,31 @@ class ContactHelper:
                 id          = contact[0].find_element(By.NAME, "selected[]").get_attribute("value")
                 firstname   = contact[2].text
                 lastname    = contact[1].text
-                self.contact_cache.append(Contact(id=id, firstname=firstname, lastname=lastname))
+                all_phones  = contact[5].text.splitlines()
+                self.contact_cache.append(Contact(id=id, firstname=firstname, lastname=lastname, home=all_phones[0], mobile=all_phones[1], work=all_phones[2], phone2=all_phones[3]))
 
         return list(self.contact_cache)
+
+    def get_contact_info_from_edit_page(self, index):
+        wd = self.app.wd
+        self.open_contact_by_index(index, "Edit")
+        id              = wd.find_element(By.NAME, "id").get_attribute("value")
+        firstname       = wd.find_element(By.NAME, "firstname").get_attribute("value")
+        lastname        = wd.find_element(By.NAME, "lastname").get_attribute("value")
+        homephone       = wd.find_element(By.NAME, "home").get_attribute("value")
+        workphone       = wd.find_element(By.NAME, "work").get_attribute("value")
+        mobilephone     = wd.find_element(By.NAME, "mobile").get_attribute("value")
+        secondaryphone  = wd.find_element(By.NAME, "phone2").get_attribute("value")
+
+        return Contact(id=id, firstname=firstname, lastname=lastname, home=homephone, mobile=mobilephone, work=workphone, phone2=secondaryphone)
+
+    def get_contact_info_from_view_page(self, index):
+        wd = self.app.wd
+        self.open_contact_by_index(index, "Details")
+        text = wd.find_element(By.ID, "content").text
+        homephone       = re.search("H: (.*)", text).group(1)
+        workphone       = re.search("W: (.*)", text).group(1)
+        mobilephone     = re.search("M: (.*)", text).group(1)
+        secondaryphone  = re.search("P: (.*)", text).group(1)
+
+        return Contact(home=homephone, mobile=mobilephone, work=workphone, phone2=secondaryphone)
