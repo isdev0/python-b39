@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 from model.contact import Contact
 
+
 def test_edit_first_contact(app):
     if app.contact.count() == 0:
         app.contact.create(Contact(firstname="TestForEditing"))
 
-    app.contact.update_first(Contact(
+    old_contacts = app.contact.getAll()
+    contact = Contact(
         firstname   = "Fname9999",
         middlename  = "Mname9999",
         lastname    = "Lname9999",
@@ -29,4 +31,14 @@ def test_edit_first_contact(app):
         ayear       = "2012",
         address2    = "Address29999",
         phone2      = "home9999",
-        notes       = "notes9999"))
+        notes       = "notes9999"
+    )
+    contact.id = old_contacts[0].id
+
+    app.contact.update_first(contact)
+
+    new_contacts = app.contact.getAll()
+    assert len(old_contacts) == len(new_contacts)
+
+    old_contacts[0] = contact
+    assert sorted(old_contacts, key=Contact.id_or_max) == sorted(new_contacts, key=Contact.id_or_max)

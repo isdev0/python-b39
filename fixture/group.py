@@ -64,9 +64,9 @@ class GroupHelper:
         wd = self.app.wd
         self.open_groups_page()
 
-        groups  = []
+        groups = []
         for element in wd.find_elements(By.CSS_SELECTOR, "span.group"):
             text = element.text
             id = element.find_element(By.NAME, "selected[]").get_attribute("value")
-            groups.append(Group(name=text, id=id))
+            groups.append(Group(id=id, name=text))
         return groups

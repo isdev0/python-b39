@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from model.group import Group
 
+
 def test_add_group(app):
     group = Group(name="123456", header="124", footer="235")
     old_groups = app.group.getAll()
