@@ -6,6 +6,7 @@ from model.contact import Contact
 
 
 class ContactHelper:
+    contact_cache = None
 
     def __init__(self, app):
         self.app = app
@@ -27,6 +28,7 @@ class ContactHelper:
 
         wd.find_element(By.XPATH, "//div[@id='content']/form/input[21]").click()
         self.open_home_page()
+        self.contact_cache = None
 
     def update_first(self, contact):
         wd = self.app.wd
@@ -41,6 +43,7 @@ class ContactHelper:
 
         wd.find_element(By.NAME, "update").click()
         self.open_home_page()
+        self.contact_cache = None
 
     def delete_first(self):
         wd = self.app.wd
@@ -50,6 +53,7 @@ class ContactHelper:
         wd.switch_to.alert.accept()
         time.sleep(0.25) #FIXME needs to find the way to avoid delaying
         self.open_home_page()
+        self.contact_cache = None
 
     def fill_client_form(self, contact, mode=0):
         # mode = 0:creating
@@ -103,16 +107,17 @@ class ContactHelper:
         return len(wd.find_elements(By.NAME, "selected[]"))
 
     def getAll(self):
-        wd = self.app.wd
-        self.open_home_page()
+        if self.contact_cache is None:
+            wd = self.app.wd
+            self.open_home_page()
 
-        contacts = []
-        elements = wd.find_elements(By.CSS_SELECTOR, "table tr[name='entry']")
-        for element in elements:
-            contact = element.find_elements(By.TAG_NAME, "td")
-            id          = contact[0].find_element(By.NAME, "selected[]").get_attribute("value")
-            firstname   = contact[2].text
-            lastname    = contact[1].text
-            contacts.append(Contact(id=id, firstname=firstname, lastname=lastname))
+            self.contact_cache = []
+            elements = wd.find_elements(By.CSS_SELECTOR, "table tr[name='entry']")
+            for element in elements:
+                contact = element.find_elements(By.TAG_NAME, "td")
+                id          = contact[0].find_element(By.NAME, "selected[]").get_attribute("value")
+                firstname   = contact[2].text
+                lastname    = contact[1].text
+                self.contact_cache.append(Contact(id=id, firstname=firstname, lastname=lastname))
 
-        return contacts
+        return list(self.contact_cache)
