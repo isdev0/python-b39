@@ -10,7 +10,7 @@ class SessionHelper:
 
     def login(self, username, password):
         wd = self.app.wd
-        self.app.open_external_page("http://localhost/addressbook/")
+        self.app.open_external_page(self.app.base_url)
         wd.find_element(By.NAME, "user").click()
         wd.find_element(By.NAME, "user").clear()
         wd.find_element(By.NAME, "user").send_keys(username)
