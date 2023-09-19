@@ -7,7 +7,7 @@ def test_edit_random_contact(app):
     if app.contact.count() == 0:
         app.contact.create(Contact(firstname="TestForEditing"))
 
-    old_contacts = app.contact.getAll()
+    old_contacts = app.contact.get_all()
     index = randrange(len(old_contacts))
     print("\nRandom Index: " + str(index))
     contact = Contact(
@@ -41,7 +41,7 @@ def test_edit_random_contact(app):
     app.contact.update_by_index(index, contact)
 
     assert len(old_contacts) == app.contact.count()
-    new_contacts = app.contact.getAll()
+    new_contacts = app.contact.get_all()
 
     old_contacts[index] = contact
     assert sorted(old_contacts, key=Contact.id_or_max) == sorted(new_contacts, key=Contact.id_or_max)

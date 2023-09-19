@@ -7,7 +7,7 @@ def test_edit_random_group(app):
     if app.group.count() == 0:
         app.group.create(Group(name="555555", header="555", footer="5555"))
 
-    old_groups = app.group.getAll()
+    old_groups = app.group.get_all()
     index = randrange(len(old_groups))
     print("\nRandom Index: " + str(index))
     group = Group(name="999999", header="999", footer="999")
@@ -16,7 +16,7 @@ def test_edit_random_group(app):
     app.group.update_by_index(index, group)
 
     assert len(old_groups) == app.group.count()
-    new_groups = app.group.getAll()
+    new_groups = app.group.get_all()
 
     old_groups[index] = group
     assert sorted(old_groups, key=Group.id_or_max) == sorted(new_groups, key=Group.id_or_max)
@@ -28,7 +28,7 @@ def test_edit_random_group(app):
 #     if app.group.count() == 0:
 #         app.group.create(Group(name="555555", header="555", footer="5555"))
 #
-#     old_groups = app.group.getAll()
+#     old_groups = app.group.get_all()
 #     app.group.update_first(Group(name="888888"))
-#     new_groups = app.group.getAll()
+#     new_groups = app.group.get_all()
 #     assert len(old_groups) == len(new_groups)

@@ -70,7 +70,7 @@ class GroupHelper:
         self.open_groups_page()
         return len(wd.find_elements(By.NAME, "selected[]"))
 
-    def getAll(self):
+    def get_all(self):
         if self.group_cache is None:
             wd = self.app.wd
             self.open_groups_page()

@@ -16,10 +16,10 @@ class ContactHelper:
         if not(len(wd.find_elements(By.NAME, "searchstring")) > 0):
             self.app.open_internal_page("home")
 
-    def open_contact_by_index(self, index, alt="Edit"):
+    def open_contact_by_index(self, index, title="Edit"):
         wd = self.app.wd
         self.open_home_page()
-        wd.find_elements(By.XPATH, "//img[@alt='" + alt + "']")[index].click()
+        wd.find_elements(By.XPATH, "//img[@title='" + title + "']")[index].click()
 
     def create(self, contact):
         wd = self.app.wd
@@ -115,7 +115,7 @@ class ContactHelper:
         self.open_home_page()
         return len(wd.find_elements(By.NAME, "selected[]"))
 
-    def getAll(self):
+    def get_all(self):
         if self.contact_cache is None:
             wd = self.app.wd
             self.open_home_page()
@@ -127,8 +127,8 @@ class ContactHelper:
                 id          = contact[0].find_element(By.NAME, "selected[]").get_attribute("value")
                 firstname   = contact[2].text
                 lastname    = contact[1].text
-                all_phones  = contact[5].text.splitlines()
-                self.contact_cache.append(Contact(id=id, firstname=firstname, lastname=lastname, home=all_phones[0], mobile=all_phones[1], work=all_phones[2], phone2=all_phones[3]))
+                all_phones  = contact[5].text
+                self.contact_cache.append(Contact(id=id, firstname=firstname, lastname=lastname, all_phones=all_phones))
 
         return list(self.contact_cache)
 
