@@ -13,9 +13,9 @@ class Application:
         elif browser == "chrome":
             self.wd = webdriver.Chrome()
         elif browser == "ie":
-            self.wd = webdriver.Ie
+            self.wd = webdriver.Ie()
         elif browser == "edge":
-            self.wd = webdriver.Edge
+            self.wd = webdriver.Edge()
         else:
             raise ValueError("Browser '%s' undefined" % browser)
 
