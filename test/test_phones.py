@@ -18,4 +18,4 @@ def clear(s):
     return re.sub("[() -]", "", s)
 
 def merge_phones(contact):
-    return "\n".join([clear(contact.home), clear(contact.mobile), clear(contact.work), clear(contact.phone2)])
+    return "\n".join(map(lambda x: clear(x), [contact.home, contact.mobile, contact.work, contact.phone2]))
