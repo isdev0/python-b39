@@ -30,7 +30,8 @@ class Contact:
                  address2=None,
                  phone2=None,
                  notes=None,
-                 all_phones=None):
+                 all_phones=None,
+                 all_emails=None):
         self.id = id
         self.firstname  = firstname
         self.middlename = middlename
@@ -57,6 +58,7 @@ class Contact:
         self.phone2     = phone2
         self.notes      = notes
         self.all_phones = all_phones
+        self.all_emails = all_emails
 
     # representation redefinition
     def __repr__(self):
