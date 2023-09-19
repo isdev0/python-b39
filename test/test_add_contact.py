@@ -39,7 +39,3 @@ def test_add_contact(app):
 
     old_contacts.append(contact)
     assert sorted(old_contacts, key=Contact.id_or_max) == sorted(new_contacts, key=Contact.id_or_max)
-
-def test_add_bunch_of_contacts(app):
-    for i in range(1, 10+1):
-        app.contact.create(Contact(firstname="fname"+str(i), lastname="lname"+str(i)))

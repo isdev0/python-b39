@@ -12,7 +12,7 @@ class Group:
 
     # representation redefinition
     def __repr__(self):
-        return "%s:%s" % (self.id, self.name)
+        return "%s:%s;%s;%s" % (self.id, self.name, self.header, self.footer)
 
     # equality redefinition
     def __eq__(self, other):
