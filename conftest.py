@@ -1,22 +1,27 @@
+import json
 import pytest
 from fixture.application import Application
 
 fixture = None
+config  = None
 
 @pytest.fixture
 def app(request):
     global fixture
-    browser   = request.config.getoption("--browser")
-    base_url  = request.config.getoption("--baseUrl")
-    user_name = request.config.getoption("--username")
-    user_password = request.config.getoption("--password")
-    if fixture is None:
-        fixture = Application(browser=browser, base_url=base_url)
-    else:
-        if not fixture.is_valid():
-            fixture = Application(browser=browser, base_url=base_url)
-    fixture.session.do_login(username=user_name, password=user_password)
+    global config
+
+    browser = request.config.getoption("--browser")
+
+    if config is None:
+        with open(request.config.getoption("--config")) as config_json:
+            config = json.load(config_json)
+
+    if fixture is None or not fixture.is_valid():
+        fixture = Application(browser=browser, base_url=config["base_url"])
+
+    fixture.session.do_login(username=config["username"], password=config["password"])
     return fixture
+
 
 @pytest.fixture(scope="session", autouse=True)
 def terminate(request):
@@ -30,6 +35,4 @@ def terminate(request):
 
 def pytest_addoption(parser):
     parser.addoption("--browser",  action="store", default="firefox")
-    parser.addoption("--baseUrl",  action="store", default="http://localhost/addressbook/")
-    parser.addoption("--username", action="store", default="admin")
-    parser.addoption("--password", action="store", default="")
+    parser.addoption("--config", action="store", default="config.json")
