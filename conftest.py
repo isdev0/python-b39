@@ -1,9 +1,11 @@
 import json
+import os.path
 import pytest
 from fixture.application import Application
 
 fixture = None
 config  = None
+
 
 @pytest.fixture
 def app(request):
@@ -13,8 +15,9 @@ def app(request):
     browser = request.config.getoption("--browser")
 
     if config is None:
-        with open(request.config.getoption("--config")) as config_json:
-            config = json.load(config_json)
+        config_json = os.path.join(os.path.dirname(os.path.abspath(__file__)), request.config.getoption("--config"))
+        with open(config_json) as f:
+            config = json.load(f)
 
     if fixture is None or not fixture.is_valid():
         fixture = Application(browser=browser, base_url=config["base_url"])
