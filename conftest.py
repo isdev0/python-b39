@@ -42,6 +42,7 @@ def pytest_addoption(parser):
     parser.addoption("--browser",  action="store", default="firefox")
     parser.addoption("--config", action="store", default="config.json")
 
+
 def pytest_generate_tests(metafunc):
     for fixture in metafunc.fixturenames:
         if fixture.startswith("data_"):

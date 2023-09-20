@@ -2,6 +2,10 @@
 from model.contact import Contact
 
 
+def test_add_simple_contact(app, data_contacts):
+    app.contact.create(data_contacts)
+
+
 def test_add_contact(app, json_contacts):
     old_contacts = app.contact.get_all()
     app.contact.create(json_contacts)
