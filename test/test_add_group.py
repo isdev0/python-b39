@@ -1,14 +1,11 @@
 # -*- coding: utf-8 -*-
-import pytest
 from model.group import Group
-from data.add_group import testdata
 
 
-@pytest.mark.parametrize("group", testdata, ids=[repr(x) for x in testdata])
-def test_add_group(app, group):
+def test_add_group(app, data_groups):
     old_groups = app.group.get_all()
-    app.group.create(group)
+    app.group.create(data_groups)
     assert len(old_groups) + 1 == app.group.count()
     new_groups = app.group.get_all()
-    old_groups.append(group)
+    old_groups.append(data_groups)
     assert sorted(old_groups, key=Group.id_or_max) == sorted(new_groups, key=Group.id_or_max)
