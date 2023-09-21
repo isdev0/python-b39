@@ -3,8 +3,9 @@ from random import randrange
 import re
 
 
-def test_phones_on_home_page(app):
-    test_info_on_home_page(app, 0, scope=("all_phones"))
+def test_phones_and_emails_on_home_page(app):
+    test_info_on_home_page(app, 0, scope=("all_phones", "all_emails"))
+
 
 def test_info_on_home_page(app, index=None, scope=None):
     contact_count = app.contact.count()
@@ -25,6 +26,7 @@ def test_info_on_home_page(app, index=None, scope=None):
     if scope is None or "all_phones" in scope: assert contact_from_home_page.all_phones == merge_phones(contact_from_edit_page)
     if scope is None or "all_emails" in scope: assert contact_from_home_page.all_emails == merge_emails(contact_from_edit_page)
 
+
 def test_phones_on_contact_view_page(app):
     contact_from_view_page = app.contact.get_contact_info_from_view_page(0)
     contact_from_edit_page = app.contact.get_contact_info_from_edit_page(0)
@@ -34,8 +36,10 @@ def test_phones_on_contact_view_page(app):
     assert contact_from_view_page.mobile == contact_from_edit_page.mobile
     assert contact_from_view_page.phone2 == contact_from_edit_page.phone2
 
+
 def clear(s):
     return re.sub("[() -]", "", s)
+
 
 def merge_phones(contact):
     return "\n".join(
@@ -46,11 +50,10 @@ def merge_phones(contact):
                )
     )
 
+
 def merge_emails(contact):
     return "\n".join(
         filter(lambda x: x != "",
-               map(lambda x: clear(x),
-                   filter(lambda x: x is not None, [contact.email, contact.email2, contact.email3])
-                   )
-               )
+            filter(lambda x: x is not None, [contact.email, contact.email2, contact.email3])
+        )
     )
