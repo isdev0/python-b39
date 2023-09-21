@@ -10,12 +10,12 @@ class DbFixture:
         self.database = database
         self.user = user
         self.password = password
-        self.connection = pymysql.connect(host=self.host, port=self.port, database=self.database, user=self.user, password=self.password)
+        self.connection = pymysql.connect(host=self.host, port=self.port, database=self.database, user=self.user, password=self.password, autocommit=True)
 
     def get_all_groups(self):
         sql_querry = "SELECT group_id, group_name, group_header, group_footer FROM group_list"
-        records = []
         cursor = self.connection.cursor()
+        records = []
         try:
             cursor.execute(sql_querry)
             for row in cursor:

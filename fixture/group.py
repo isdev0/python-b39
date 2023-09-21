@@ -53,6 +53,14 @@ class GroupHelper:
         self.open_groups_page()
         self.group_cache = None
 
+    def delete_by_id(self, id):
+        wd = self.app.wd
+        self.open_groups_page()
+        wd.find_element(By.CSS_SELECTOR, "input[value='" + id + "']").click()
+        wd.find_element(By.NAME, "delete").click()
+        self.open_groups_page()
+        self.group_cache = None
+
     def fill_group_form(self, group):
         self.fill_field("group_name", group.name)
         self.fill_field("group_header", group.header)
