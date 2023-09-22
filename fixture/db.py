@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import pymysql
+from model.contact import Contact
 from model.group import Group
 
 
@@ -21,6 +22,19 @@ class DbFixture:
             for row in cursor:
                 (id, name, header, footer) = row
                 records.append(Group(id=str(id), name=name, header=header, footer=footer))
+        finally:
+            cursor.close()
+        return records
+
+    def get_all_contacts(self):
+        sql_querry = "SELECT id, firstname, lastname FROM addressbook WHERE deprecated='0000-00-00 00:00:00'"
+        cursor = self.connection.cursor()
+        records = []
+        try:
+            cursor.execute(sql_querry)
+            for row in cursor:
+                (id, firstname, lastname) = row
+                records.append(Contact(id=str(id), firstname=firstname, lastname=lastname))
         finally:
             cursor.close()
         return records
