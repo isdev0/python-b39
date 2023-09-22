@@ -1,7 +1,8 @@
 from fixture.db import DbFixture
+from fixture.orm import ORMFixture
 
-
-db = DbFixture(host="localhost", port=3306, database="addressbook", user="root", password="")
+#db = DbFixture(host="localhost", port=3306, database="addressbook", user="root", password="")
+db = ORMFixture(host="localhost", port=3306, database="addressbook", user="root", password="")
 
 try:
     groups = db.get_all_groups()
@@ -17,4 +18,4 @@ try:
     print(len(contacts))
 
 finally:
-    db.destroy()
+    pass#db.destroy()
