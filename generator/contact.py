@@ -25,8 +25,9 @@ for o, a in opts:
         f = a
 
 
-def random_string(prefix, maxlen):
-    symbols = string.ascii_letters + string.digits + string.punctuation + " "*10
+def random_string(prefix, maxlen, cont=False):
+    symbols = string.ascii_letters + string.digits + "_" + " "
+    if cont: symbols = symbols + string.punctuation + " "*10 #contamination
     return prefix + "".join([random.choice(symbols) for i in range(random.randrange(maxlen))])
 
 

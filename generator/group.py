@@ -24,15 +24,16 @@ for o, a in opts:
         f = a
 
 
-def random_string(prefix, maxlen):
-    symbols = string.ascii_letters + string.digits + string.punctuation + " "*10
+def random_string(prefix, maxlen, cont=False):
+    symbols = string.ascii_letters + string.digits + "_" + " "
+    if cont: symbols = symbols + string.punctuation + " "*10 #contamination
     return prefix + "".join([random.choice(symbols) for i in range(random.randrange(maxlen))])
 
 
-testdata = [Group(name="", header="", footer="")] + [
-    Group(name=random_string("name_", 10), header=random_string("header_", 20), footer=random_string("footer_",20))
+testdata = [
+    Group(name=random_string("GroupName_", 10), header=random_string("GroupHeader_", 20), footer=random_string("GroupFooter_", 20))
     for i in range(n)
-]
+]# + [Group(name="", header="", footer="")]
 
 with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "../", f), "w") as out:
 #    out.write(json.dumps(testdata, default=lambda x: x.__dict__, indent=2))
