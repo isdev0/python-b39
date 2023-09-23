@@ -26,15 +26,31 @@ class DbFixture:
             cursor.close()
         return records
 
-    def get_all_contacts(self):
-        sql_querry = "SELECT id, firstname, lastname FROM addressbook WHERE deprecated='0000-00-00 00:00:00'"
+    def get_all_contacts(self, autoaggregation=False):
+        sql_querry = "SELECT id, firstname, lastname, address, home, mobile, work, phone2, email, email2, email3 FROM addressbook WHERE deprecated='0000-00-00 00:00:00'"
         cursor = self.connection.cursor()
         records = []
         try:
             cursor.execute(sql_querry)
             for row in cursor:
-                (id, firstname, lastname) = row
-                records.append(Contact(id=str(id), firstname=firstname, lastname=lastname))
+                (id, firstname, lastname, address, home, mobile, work, phone2, email, email2, email3) = row
+                new_contact = Contact(
+                    id=str(id),
+                    firstname=firstname,
+                    lastname=lastname,
+                    address=address,
+                    home=home,
+                    mobile=mobile,
+                    work=work,
+                    phone2=phone2,
+                    email=email,
+                    email2=email2,
+                    email3=email3
+                )
+                if autoaggregation:
+                    new_contact.set_all_emails()
+                    new_contact.set_all_phones()
+                records.append(new_contact)
         finally:
             cursor.close()
         return records

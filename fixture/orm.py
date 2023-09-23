@@ -46,9 +46,9 @@ class ORMFixture:
             return Group(id=str(group.id), name=group.name, header=group.header, footer=group.footer)
         return list(map(convert, groups))
 
-    def convert_contacts_to_model(self, contacts):
+    def convert_contacts_to_model(self, contacts, autoaggregation=False):
         def convert(contact):
-            return Contact(
+            new_contact = Contact(
                 id=str(contact.id),
                 firstname=contact.firstname,
                 lastname=contact.lastname,
@@ -61,6 +61,11 @@ class ORMFixture:
                 email2=contact.email2,
                 email3=contact.email3
             )
+            if autoaggregation:
+                new_contact.set_all_phones()
+                new_contact.set_all_emails()
+            return new_contact
+
         return list(map(convert, contacts))
 
     def get_orm_group_by_id(self, group_id):
@@ -76,8 +81,8 @@ class ORMFixture:
         return self.convert_groups_to_model(select(group for group in ORMFixture.ORMGroup))
 
     @db_session
-    def get_all_contacts(self):
-        return self.convert_contacts_to_model(select(contact for contact in ORMFixture.ORMContact if contact.deprecated is None))
+    def get_all_contacts(self, autoaggregation=False):
+        return self.convert_contacts_to_model(select(contact for contact in ORMFixture.ORMContact if contact.deprecated is None), autoaggregation)
 
     @db_session
     def get_contacts_in_group(self, group):
