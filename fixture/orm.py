@@ -9,6 +9,14 @@ from model.group import Group
 class ORMFixture:
     db = Database()
 
+    def __init__(self, host, port, database, user, password):
+        self.db.bind("mysql", host=host, port=port, database=database, user=user, password=password)#, conv=decoders)
+        self.db.generate_mapping()
+        #sql_debug(True)
+
+    def destroy(self):
+        self.db.disconnect()
+
     class ORMGroup(db.Entity):
         _table_ = "group_list"
         id      = PrimaryKey(int,   column="group_id")
@@ -24,11 +32,6 @@ class ORMFixture:
         lastname    = Optional(str,      column="lastname")
         deprecated  = Optional(datetime, column="deprecated") #if using conv=decoders then type should be =str, for the pony default use =datetime
         groups = Set(lambda: ORMFixture.ORMGroup, table="address_in_groups", column="group_id", reverse="contacts", lazy=True)
-
-    def __init__(self, host, port, database, user, password):
-        self.db.bind("mysql", host=host, port=port, database=database, user=user, password=password)#, conv=decoders)
-        self.db.generate_mapping()
-        #sql_debug(True)
 
     def convert_groups_to_model(self, groups):
         def convert(group):

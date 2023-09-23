@@ -1,24 +1,25 @@
 # -*- coding: utf-8 -*-
+import random
 from model.group import Group
-from random import randrange
 
 
-def test_edit_random_group(app):
-    if app.group.count() == 0:
+def test_edit_random_group(app, orm):
+    if len(orm.get_all_groups()) == 0:
         app.group.create(Group(name="555555", header="555", footer="5555"))
 
-    old_groups = app.group.get_all()
-    index = randrange(len(old_groups))
-    print("\nRandom Index: " + str(index))
-    group = Group(name="999999", header="999", footer="999")
-    group.id = old_groups[index].id
+    old_groups = orm.get_all_groups()
+    old_group = random.choice(old_groups)
 
-    app.group.update_by_index(index, group)
+    print("\nRandom Id: " + str(old_group.id))
+    new_group = Group(name="999999", header="999", footer="999")
+    new_group.id = old_group.id
 
-    assert len(old_groups) == app.group.count()
-    new_groups = app.group.get_all()
+    app.group.update_by_id(old_group.id, new_group)
 
-    old_groups[index] = group
+    new_groups = orm.get_all_groups()
+    assert len(old_groups) == len(new_groups)
+
+    old_groups = list(map(lambda x: x if x != old_group else new_group, old_groups))
     assert sorted(old_groups, key=Group.id_or_max) == sorted(new_groups, key=Group.id_or_max)
 
     # testing interrupted session using .logout() method

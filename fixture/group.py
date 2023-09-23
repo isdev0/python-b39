@@ -42,6 +42,19 @@ class GroupHelper:
         self.open_groups_page()
         self.group_cache = None
 
+    def update_by_id(self, id, group):
+        wd = self.app.wd
+
+        self.open_groups_page()
+        wd.find_element(By.CSS_SELECTOR, "input[value='" + id + "']").click()
+        wd.find_element(By.NAME, "edit").click()
+
+        self.fill_group_form(group)
+
+        wd.find_element(By.NAME, "update").click()
+        self.open_groups_page()
+        self.group_cache = None
+
     def delete_first(self):
         self.delete_by_index(0)
 

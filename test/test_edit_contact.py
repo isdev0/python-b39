@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
+import random
 from model.contact import Contact
-from random import randrange
 
 
-def test_edit_random_contact(app):
-    if app.contact.count() == 0:
+def test_edit_random_contact(app, orm):
+    if len(orm.get_all_contacts()) == 0:
         app.contact.create(Contact(firstname="TestForEditing"))
 
-    old_contacts = app.contact.get_all()
-    index = randrange(len(old_contacts))
-    print("\nRandom Index: " + str(index))
-    contact = Contact(
+    old_contacts = orm.get_all_contacts()
+    old_contact = random.choice(old_contacts)
+
+    print("\nRandom Id: " + str(old_contact.id))
+    new_contact = Contact(
         firstname   = "Fname9999",
         middlename  = "Mname9999",
         lastname    = "Lname9999",
@@ -36,12 +37,12 @@ def test_edit_random_contact(app):
         phone2      = "home9999",
         notes       = "notes9999"
     )
-    contact.id = old_contacts[index].id
+    new_contact.id = old_contact.id
 
-    app.contact.update_by_index(index, contact)
+    app.contact.update_by_id(old_contact.id, new_contact)
 
-    assert len(old_contacts) == app.contact.count()
-    new_contacts = app.contact.get_all()
+    new_contacts = orm.get_all_contacts()
+    assert len(old_contacts) == len(new_contacts)
 
-    old_contacts[index] = contact
+    old_contacts = list(map(lambda x: x if x != old_contact else new_contact, old_contacts))
     assert sorted(old_contacts, key=Contact.id_or_max) == sorted(new_contacts, key=Contact.id_or_max)

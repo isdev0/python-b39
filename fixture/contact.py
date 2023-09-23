@@ -21,6 +21,11 @@ class ContactHelper:
         self.open_home_page()
         wd.find_elements(By.XPATH, "//img[@title='" + title + "']")[index].click()
 
+    def open_contact_by_id(self, id):
+        wd = self.app.wd
+        self.open_home_page()
+        wd.find_element(By.CSS_SELECTOR, "a[href='edit.php?id=" + id + "']").click()
+
     def create(self, contact):
         wd = self.app.wd
 
@@ -51,16 +56,39 @@ class ContactHelper:
         self.open_home_page()
         self.contact_cache = None
 
+    def update_by_id(self, id, contact):
+        wd = self.app.wd
+
+        # updating mode
+        mode = 1
+        self.open_contact_by_id(id)
+        self.fill_client_form(contact, mode)
+
+        wd.find_element(By.NAME, "update").click()
+        self.open_home_page()
+        self.contact_cache = None
+
     def delete_first(self):
         self.delete_by_index(0)
+
+    def press_delete_and_confirm(self, wd):
+        wd.find_element(By.XPATH, "//input[@value='Delete']").click()
+        wd.switch_to.alert.accept()
+        time.sleep(0.25)  # FIXME needs to find the way to avoid delaying
 
     def delete_by_index(self, index):
         wd = self.app.wd
         self.open_home_page()
         wd.find_elements(By.NAME, "selected[]")[index].click()
-        wd.find_element(By.XPATH, "//input[@value='Delete']").click()
-        wd.switch_to.alert.accept()
-        time.sleep(0.25) #FIXME needs to find the way to avoid delaying
+        self.press_delete_and_confirm(wd)
+        self.open_home_page()
+        self.contact_cache = None
+
+    def delete_by_id(self, id):
+        wd = self.app.wd
+        self.open_home_page()
+        wd.find_element(By.CSS_SELECTOR, "input[value='" + id + "']").click()
+        self.press_delete_and_confirm(wd)
         self.open_home_page()
         self.contact_cache = None
 

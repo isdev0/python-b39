@@ -5,6 +5,7 @@ import os.path
 import pytest
 from fixture.application import Application
 from fixture.db import DbFixture
+from fixture.orm import ORMFixture
 
 fixture = None
 config  = None
@@ -40,6 +41,16 @@ def db(request):
     return dbfixture
 
 
+@pytest.fixture(scope="session")
+def orm(request):
+    db_config = load_config(request.config.getoption("--config"))['db']
+    ormfixture = ORMFixture(host=db_config["host"], port=db_config["port"], database=db_config["database"], user=db_config["user"], password=db_config["password"])
+    def fin():
+        ormfixture.destroy()
+    request.addfinalizer(fin)
+    return ormfixture
+
+
 @pytest.fixture(scope="session", autouse=True)
 def terminate(request):
     def fin():
@@ -53,6 +64,7 @@ def terminate(request):
 @pytest.fixture()
 def check_ui(request):
     return request.config.getoption("--check_ui")
+
 
 def pytest_addoption(parser):
     parser.addoption("--browser",  action="store", default="firefox")
