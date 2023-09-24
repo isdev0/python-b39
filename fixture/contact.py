@@ -196,3 +196,10 @@ class ContactHelper:
         except: secondaryphone = ""
 
         return Contact(home=homephone, mobile=mobilephone, work=workphone, phone2=secondaryphone)
+
+    def add_contact_to_group(self, contact_id, group_id):
+        wd = self.app.wd
+        self.open_home_page()
+        wd.find_element(By.CSS_SELECTOR, "input[id='" + str(contact_id) + "'][name='selected[]']").click()
+        self.fill_selector("to_group", str(group_id))
+        wd.find_element(By.NAME, "add").click()

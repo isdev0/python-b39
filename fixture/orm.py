@@ -95,3 +95,4 @@ class ORMFixture:
         return self.convert_contacts_to_model(
             select(contact for contact in ORMFixture.ORMContact if contact.deprecated is None and orm_group not in contact.groups)
         )
+
