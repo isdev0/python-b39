@@ -73,8 +73,12 @@ class ORMFixture:
         return orm_group
 
     @db_session
-    def get_group_by_id(self, group_id="199"):
+    def get_group_by_id(self, group_id):
         return self.convert_groups_to_model(select(group for group in ORMFixture.ORMGroup if group.id == group_id))
+
+    @db_session
+    def get_contact_by_id(self, contact_id):
+        return self.convert_contacts_to_model(select(contact for contact in ORMFixture.ORMContact if contact.id == contact_id))
 
     @db_session
     def get_all_groups(self):
@@ -96,3 +100,11 @@ class ORMFixture:
             select(contact for contact in ORMFixture.ORMContact if contact.deprecated is None and orm_group not in contact.groups)
         )
 
+    @db_session
+    def get_contact_ids_in_groups(self):
+        return self.db.select("SELECT ag.id, ag.group_id FROM group_list AS gl INNER JOIN address_in_groups AS ag ON gl.group_id=ag.group_id LIMIT 100")
+
+    @db_session
+    def get_not_empty_groups(self):
+        groups_id = self.db.select("SELECT DISTINCT ag.group_id FROM group_list AS gl INNER JOIN address_in_groups AS ag ON gl.group_id=ag.group_id LIMIT 100")
+        return self.convert_groups_to_model(select(group for group in ORMFixture.ORMGroup if group.id in groups_id))

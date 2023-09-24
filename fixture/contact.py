@@ -200,6 +200,14 @@ class ContactHelper:
     def add_contact_to_group(self, contact_id, group_id):
         wd = self.app.wd
         self.open_home_page()
-        wd.find_element(By.CSS_SELECTOR, "input[id='" + str(contact_id) + "'][name='selected[]']").click()
-        self.fill_selector("to_group", str(group_id))
+        wd.find_element(By.CSS_SELECTOR, "input[id='" + contact_id + "'][name='selected[]']").click()
+        self.fill_selector("to_group", group_id)
         wd.find_element(By.NAME, "add").click()
+
+    def del_contact_from_group(self, contact_id, group_id):
+        wd = self.app.wd
+        self.open_home_page()
+        self.fill_selector("group", group_id)
+        time.sleep(0.25)  # FIXME needs to find the way to avoid delaying
+        wd.find_element(By.CSS_SELECTOR, "input[id='" + contact_id + "'][name='selected[]']").click()
+        wd.find_element(By.NAME, "remove").click()
