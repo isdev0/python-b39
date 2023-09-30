@@ -1,4 +1,4 @@
-from pytest_bdd import given, when, then
+from pytest_bdd import given, when, then, parsers
 from model.group import Group
 
 
@@ -7,7 +7,8 @@ def group_list(db):
     return db.get_all_groups()
 
 
-@given("a group with <name>, <header> and <footer>", target_fixture="new_group")
+# @given("a group with <name>, <header> and <footer>", target_fixture="new_group")
+@given(parsers.parse("a group with {name}, {header} and {footer}"), target_fixture='new_group')
 def new_group(name, header, footer):
     return Group(name=name, header=header, footer=footer)
 
@@ -23,3 +24,4 @@ def verify_group_added(db, group_list, new_group):
     new_groups = db.get_all_groups()
     old_groups.append(new_group)
     assert sorted(old_groups, key=Group.id_or_max) == sorted(new_groups, key=Group.id_or_max)
+
