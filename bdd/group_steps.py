@@ -1,4 +1,6 @@
-from pytest_bdd import given, when, then
+import random
+
+from pytest_bdd import given, when, then, parsers
 from model.group import Group
 
 
@@ -7,7 +9,8 @@ def group_list(db):
     return db.get_all_groups()
 
 
-@given("a group with <name>, <header> and <footer>", target_fixture="new_group")
+# @given("a group with <name>, <header> and <footer>", target_fixture="new_group")
+@given(parsers.parse("a group with {name}, {header} and {footer}"), target_fixture="new_group")
 def new_group(name, header, footer):
     return Group(name=name, header=header, footer=footer)
 
@@ -23,3 +26,28 @@ def verify_group_added(db, group_list, new_group):
     new_groups = db.get_all_groups()
     old_groups.append(new_group)
     assert sorted(old_groups, key=Group.id_or_max) == sorted(new_groups, key=Group.id_or_max)
+
+
+@given("a non-empty group list", target_fixture="non_empty_group_list")
+def non_empty_group_list(app, db):
+    if len(db.get_all_groups()) == 0:
+        app.group.create(Group(name="GroupForDeleting"))
+    return db.get_all_groups()
+
+
+@given("a random group in the list", target_fixture="random_group")
+def random_group(non_empty_group_list):
+    return random.choice(non_empty_group_list)
+
+@when("I delete the group from the list")
+def delete_group(app, random_group):
+    app.group.delete_by_id(random_group.id)
+
+@then("the new list group is equal to the old list group without the deleted")
+def verify_group_deleted(db, non_empty_group_list, random_group):
+    old_groups = non_empty_group_list
+    new_groups = db.get_all_groups()
+    assert len(old_groups) - 1 == len(new_groups)
+
+    old_groups.remove(random_group)
+    assert old_groups == new_groups
