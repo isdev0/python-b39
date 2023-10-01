@@ -1,5 +1,4 @@
 import random
-
 from pytest_bdd import given, when, then, parsers
 from model.group import Group
 
@@ -9,7 +8,6 @@ def group_list(db):
     return db.get_all_groups()
 
 
-# @given("a group with <name>, <header> and <footer>", target_fixture="new_group")
 @given(parsers.parse("a group with {name}, {header} and {footer}"), target_fixture="new_group")
 def new_group(name, header, footer):
     return Group(name=name, header=header, footer=footer)
@@ -39,9 +37,11 @@ def non_empty_group_list(app, db):
 def random_group(non_empty_group_list):
     return random.choice(non_empty_group_list)
 
+
 @when("I delete the group from the list")
 def delete_group(app, random_group):
     app.group.delete_by_id(random_group.id)
+
 
 @then("the new list group is equal to the old list group without the deleted")
 def verify_group_deleted(db, non_empty_group_list, random_group):

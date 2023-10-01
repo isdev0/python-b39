@@ -50,16 +50,16 @@ class ORMFixture:
         def convert(contact):
             new_contact = Contact(
                 id=str(contact.id),
-                firstname=contact.firstname,
-                lastname=contact.lastname,
-                address=contact.address,
-                home=contact.home,
-                mobile=contact.mobile,
-                work=contact.work,
-                phone2=contact.phone2,
-                email=contact.email,
-                email2=contact.email2,
-                email3=contact.email3
+                firstname=contact.firstname if not contact.firstname == "" else None,
+                lastname=contact.lastname if not contact.lastname == "" else None,
+                address=contact.address if not contact.address == "" else None,
+                home=contact.home if not contact.home == "" else None,
+                mobile=contact.mobile if not contact.mobile == "" else None,
+                work=contact.work if not contact.work == "" else None,
+                phone2=contact.phone2 if not contact.phone2 == "" else None,
+                email=contact.email if not contact.email == "" else None,
+                email2=contact.email2 if not contact.email2 == "" else None,
+                email3=contact.email3 if not contact.email3 == "" else None
             )
             if autoaggregation:
                 new_contact.set_all_phones()

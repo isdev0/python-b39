@@ -36,16 +36,16 @@ class DbFixture:
                 (id, firstname, lastname, address, home, mobile, work, phone2, email, email2, email3) = row
                 new_contact = Contact(
                     id=str(id),
-                    firstname=firstname,
-                    lastname=lastname,
-                    address=address,
-                    home=home,
-                    mobile=mobile,
-                    work=work,
-                    phone2=phone2,
-                    email=email,
-                    email2=email2,
-                    email3=email3
+                    firstname=firstname if not firstname == "" else None,
+                    lastname=lastname if not lastname == "" else None,
+                    address=address if not address == "" else None,
+                    home=home if not home == "" else None,
+                    mobile=mobile if not mobile == "" else None,
+                    work=work if not address == "" else None,
+                    phone2=phone2 if not phone2 == "" else None,
+                    email=email if not email == "" else None,
+                    email2=email2 if not email2 == "" else None,
+                    email3=email3 if not email3 == "" else None
                 )
                 if autoaggregation:
                     new_contact.set_all_emails()
