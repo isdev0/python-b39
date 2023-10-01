@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="1" skipped="3" tests="15" time="50.584" timestamp="2023-10-01T19:34:09.439082" hostname="RA-DELL3490"><testcase classname="test.test_add_contact" name="test_add_simple_contact[None:FirstName1 LastName1 Address1 None None]" time="0.001"><skipped type="pytest.skip" message="needs json contacts only">C:\Users\arad\.jenkins\workspace\addressbook tests\test\test_add_contact.py:6: needs json contacts only</skipped></testcase><testcase classname="test.test_add_contact" name="test_add_simple_contact[None:FirstName2 LastName2 Address2 None None]" time="0.000"><skipped type="pytest.skip" message="needs json contacts only">C:\Users\arad\.jenkins\workspace\addressbook tests\test\test_add_contact.py:6: needs json contacts only</skipped></testcase><testcase classname="test.test_add_contact" name="test_add_simple_contact[None:FirstName3 LastName3 Address3 None None]" time="0.000"><skipped type="pytest.skip" message="needs json contacts only">C:\Users\arad\.jenkins\workspace\addressbook tests\test\test_add_contact.py:6: needs json contacts only</skipped></testcase><testcase classname="test.test_add_contact" name="test_add_contact[None:FNG LNAL Address1ipcc None None]" time="16.134" /><testcase classname="test.test_add_contact" name="test_add_contact[None:FNn1zxGKM LN Address1KmjBwN None None]" time="8.470" /><testcase classname="test.test_add_group" name="test_add_group[None:GroupName1;GroupHeader1;GroupFooter1]" time="1.703" /><testcase classname="test.test_add_group" name="test_add_group[None:GroupName2;GroupHeader2;GroupFooter2]" time="1.545" /><testcase classname="test.test_contacts_in_groups" name="test_add_random_contact_to_random_group" time="1.747" /><testcase classname="test.test_contacts_in_groups" name="test_del_random_contact_from_not_empty_group" time="1.843" /><testcase classname="test.test_del_contact" name="test_delete_random_contact" time="1.203"><failure message="selenium.common.exceptions.NoSuchElementException: Message: Unable to locate element: input[value='111']; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#no-such-element-exception&#10;Stacktrace:&#10;RemoteError@chrome://remote/content/shared/RemoteError.sys.mjs:8:8&#10;WebDriverError@chrome://remote/content/shared/webdriver/Errors.sys.mjs:189:5&#10;NoSuchElementError@chrome://remote/content/shared/webdriver/Errors.sys.mjs:507:5&#10;dom.find/&lt;/&lt;@chrome://remote/content/shared/DOM.sys.mjs:132:16">app = &lt;fixture.application.Application object at 0x000001A01DFB0A30&gt;
+orm = &lt;fixture.orm.ORMFixture object at 0x000001A01DE58790&gt;
+
+    def test_delete_random_contact(app, orm):
+        if len(orm.get_all_contacts()) == 0:
+            app.contact.create(Contact(firstname="TestForDeleting"))
+    
+        old_contacts = orm.get_all_contacts()
+        contact = random.choice(old_contacts)
+    
+        print("\nRandom Id: " + str(contact.id))
+&gt;       app.contact.delete_by_id(contact.id)
+
+test\test_del_contact.py:14: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+fixture\contact.py:90: in delete_by_id
+    wd.find_element(By.CSS_SELECTOR, "input[value='" + id + "']").click()
+..\..\shiningpanda\jobs\62ae2d4d\virtualenvs\d41d8cd9\lib\site-packages\selenium\webdriver\remote\webdriver.py:738: in find_element
+    return self.execute(Command.FIND_ELEMENT, {"using": by, "value": value})["value"]
+..\..\shiningpanda\jobs\62ae2d4d\virtualenvs\d41d8cd9\lib\site-packages\selenium\webdriver\remote\webdriver.py:344: in execute
+    self.error_handler.check_response(response)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = &lt;selenium.webdriver.remote.errorhandler.ErrorHandler object at 0x000001A01DFB0D90&gt;
+response = {'status': 404, 'value': '{"value":{"error":"no such element","message":"Unable to locate element: input[value=\'111\'.../content/shared/webdriver/Errors.sys.mjs:507:5\\ndom.find/&lt;/&lt;@chrome://remote/content/shared/DOM.sys.mjs:132:16\\n"}}'}
+
+    def check_response(self, response: Dict[str, Any]) -&gt; None:
+        """Checks that a JSON response from the WebDriver does not have an
+        error.
+    
+        :Args:
+         - response - The JSON response from the WebDriver server as a dictionary
+           object.
+    
+        :Raises: If the response contains an error message.
+        """
+        status = response.get("status", None)
+        if not status or status == ErrorCode.SUCCESS:
+            return
+        value = None
+        message = response.get("message", "")
+        screen: str = response.get("screen", "")
+        stacktrace = None
+        if isinstance(status, int):
+            value_json = response.get("value", None)
+            if value_json and isinstance(value_json, str):
+                import json
+    
+                try:
+                    value = json.loads(value_json)
+                    if len(value) == 1:
+                        value = value["value"]
+                    status = value.get("error", None)
+                    if not status:
+                        status = value.get("status", ErrorCode.UNKNOWN_ERROR)
+                        message = value.get("value") or value.get("message")
+                        if not isinstance(message, str):
+                            value = message
+                            message = message.get("message")
+                    else:
+                        message = value.get("message", None)
+                except ValueError:
+                    pass
+    
+        exception_class: Type[WebDriverException]
+        e = ErrorCode()
+        error_codes = [item for item in dir(e) if not item.startswith("__")]
+        for error_code in error_codes:
+            error_info = getattr(ErrorCode, error_code)
+            if isinstance(error_info, list) and status in error_info:
+                exception_class = getattr(ExceptionMapping, error_code, WebDriverException)
+                break
+        else:
+            exception_class = WebDriverException
+    
+        if not value:
+            value = response["value"]
+        if isinstance(value, str):
+            raise exception_class(value)
+        if message == "" and "message" in value:
+            message = value["message"]
+    
+        screen = None  # type: ignore[assignment]
+        if "screen" in value:
+            screen = value["screen"]
+    
+        stacktrace = None
+        st_value = value.get("stackTrace") or value.get("stacktrace")
+        if st_value:
+            if isinstance(st_value, str):
+                stacktrace = st_value.split("\n")
+            else:
+                stacktrace = []
+                try:
+                    for frame in st_value:
+                        line = frame.get("lineNumber", "")
+                        file = frame.get("fileName", "&lt;anonymous&gt;")
+                        if line:
+                            file = f"{file}:{line}"
+                        meth = frame.get("methodName", "&lt;anonymous&gt;")
+                        if "className" in frame:
+                            meth = f"{frame['className']}.{meth}"
+                        msg = "    at %s (%s)"
+                        msg = msg % (meth, file)
+                        stacktrace.append(msg)
+                except TypeError:
+                    pass
+        if exception_class == UnexpectedAlertPresentException:
+            alert_text = None
+            if "data" in value:
+                alert_text = value["data"].get("text")
+            elif "alert" in value:
+                alert_text = value["alert"].get("text")
+            raise exception_class(message, screen, stacktrace, alert_text)  # type: ignore[call-arg]  # mypy is not smart enough here
+&gt;       raise exception_class(message, screen, stacktrace)
+E       selenium.common.exceptions.NoSuchElementException: Message: Unable to locate element: input[value='111']; For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#no-such-element-exception
+E       Stacktrace:
+E       RemoteError@chrome://remote/content/shared/RemoteError.sys.mjs:8:8
+E       WebDriverError@chrome://remote/content/shared/webdriver/Errors.sys.mjs:189:5
+E       NoSuchElementError@chrome://remote/content/shared/webdriver/Errors.sys.mjs:507:5
+E       dom.find/&lt;/&lt;@chrome://remote/content/shared/DOM.sys.mjs:132:16
+
+..\..\shiningpanda\jobs\62ae2d4d\virtualenvs\d41d8cd9\lib\site-packages\selenium\webdriver\remote\errorhandler.py:229: NoSuchElementException</failure></testcase><testcase classname="test.test_del_group" name="test_delete_random_group" time="0.555" /><testcase classname="test.test_edit_contact" name="test_edit_random_contact" time="9.281" /><testcase classname="test.test_edit_group" name="test_edit_random_group" time="2.043" /><testcase classname="test.test_info" name="test_all_info_on_home_page" time="1.374" /><testcase classname="test.test_ui_matches_db" name="test_group_list" time="4.455" /></testsuite></testsuites>
