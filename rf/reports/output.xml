@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 6.1.1 (Python 3.10.11 on win32)" generated="20231002 00:16:51.067" rpa="false" schemaversion="4">
+<suite id="s1" name="Rf" source="D:\Projects\python-b39\rf">
+<suite id="s1-s1" name="Group Scenarios" source="D:\Projects\python-b39\rf\group_scenarios.robot">
+<kw name="Init Fixtures" library="Addressbook" type="SETUP">
+<status status="PASS" starttime="20231002 00:16:51.231" endtime="20231002 00:16:58.737"/>
+</kw>
+<test id="s1-s1-t1" name="Add new group" line="8">
+<kw name="Create Group" library="Addressbook">
+<arg>name1</arg>
+<arg>header1</arg>
+<arg>footer1</arg>
+<status status="PASS" starttime="20231002 00:16:58.740" endtime="20231002 00:17:00.506"/>
+</kw>
+<status status="PASS" starttime="20231002 00:16:58.738" endtime="20231002 00:17:00.506"/>
+</test>
+<kw name="Destroy Fixtures" library="Addressbook" type="TEARDOWN">
+<status status="PASS" starttime="20231002 00:17:00.508" endtime="20231002 00:17:03.476"/>
+</kw>
+<status status="PASS" starttime="20231002 00:16:51.093" endtime="20231002 00:17:03.476"/>
+</suite>
+<status status="PASS" starttime="20231002 00:16:51.069" endtime="20231002 00:17:03.482"/>
+</suite>
+<statistics>
+<total>
+<stat pass="1" fail="0" skip="0">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat pass="1" fail="0" skip="0" id="s1" name="Rf">Rf</stat>
+<stat pass="1" fail="0" skip="0" id="s1-s1" name="Group Scenarios">Rf.Group Scenarios</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>
