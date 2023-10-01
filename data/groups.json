@@ -1,0 +1,37 @@
+[
+  {
+    "py/object": "model.group.Group",
+    "id": null,
+    "name": "GroupName_uv",
+    "header": "GroupHeader_jfu7IfyWQhMljq_z",
+    "footer": "GroupFooter_tQDkWkaQeFT7yu9Kj"
+  },
+  {
+    "py/object": "model.group.Group",
+    "id": null,
+    "name": "GroupName_NJ9AGa",
+    "header": "GroupHeader_i9gzqc8oUu",
+    "footer": "GroupFooter_09laySu80AgMKncZ"
+  },
+  {
+    "py/object": "model.group.Group",
+    "id": null,
+    "name": "GroupName_SAowij1",
+    "header": "GroupHeader_wcgHI9__VVDNRcB",
+    "footer": "GroupFooter_QuxCeeg2X7ovMztszL"
+  },
+  {
+    "py/object": "model.group.Group",
+    "id": null,
+    "name": "GroupName_aUFCuPr",
+    "header": "GroupHeader_HnAE",
+    "footer": "GroupFooter_p75L3u6mQvvpAR"
+  },
+  {
+    "py/object": "model.group.Group",
+    "id": null,
+    "name": "GroupName_oA",
+    "header": "GroupHeader_dCg",
+    "footer": "GroupFooter_oVE9oi"
+  }
+]
